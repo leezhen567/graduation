@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>给最棒的你 🌸 毕业快乐</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap');
+
+  :root {
+    --rose: oklch(0.78 0.12 15);
+    --warm-white: oklch(0.98 0.005 90);
+    --text: oklch(0.28 0.02 30);
+    --text-light: oklch(0.5 0.03 30);
+    --bg: var(--warm-white);
+    --card-bg: oklch(0.99 0.005 90 / 0.85);
+    --border: oklch(0.9 0.03 30 / 0.5);
+    --shadow: oklch(0.7 0.04 15 / 0.1);
+    --glass: oklch(0.99 0.005 90 / 0.7);
+  }
+  [data-theme="dark"] {
+    --rose: oklch(0.82 0.14 15);
+    --warm-white: oklch(0.12 0.01 30);
+    --text: oklch(0.92 0.01 30);
+    --text-light: oklch(0.7 0.02 30);
+    --bg: oklch(0.08 0.01 30);
+    --card-bg: oklch(0.15 0.01 30 / 0.9);
+    --border: oklch(0.25 0.02 30 / 0.5);
+    --shadow: oklch(0 0 0 / 0.3);
+    --glass: oklch(0.12 0.01 30 / 0.7);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    font-family: 'Noto Serif SC', serif;
+    color: var(--text);
+    background: var(--bg);
+    overflow-x: hidden;
+    transition: background 0.4s, color 0.4s;
+  }
+
+  /* ===== Floating petals ===== */
+  .petal { position: fixed; pointer-events: none; z-index: 100; opacity: 0; animation: petalFall linear infinite; }
+  .petal svg { width: 100%; height: 100%; }
+  @keyframes petalFall {
+    0% { opacity: 0; transform: translateY(-10vh) rotate(0deg) translateX(0); }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(105vh) rotate(720deg) translateX(80px); }
+  }
+
+  /* ===== Sparkle on click ===== */
+  .sparkle-particle { position: fixed; pointer-events: none; z-index: 999; font-size: 12px; animation: sparkleUp 0.8s ease-out forwards; }
+  @keyframes sparkleUp { 0% { opacity: 1; transform: translate(0, 0) scale(1); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); } }
+
+  /* ===== Hero ===== */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; position: relative; padding: 2rem;
+    background:
+      radial-gradient(ellipse at 20% 50%, oklch(0.94 0.06 30 / 0.4), transparent 60%),
+      radial-gradient(ellipse at 80% 30%, oklch(0.92 0.06 300 / 0.25), transparent 50%),
+      radial-gradient(ellipse at 50% 80%, oklch(0.93 0.05 60 / 0.3), transparent 50%),
+      var(--bg);
+  }
+  .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23f0c0b0' opacity='0.3'/%3E%3C/svg%3E"); opacity: 0.5; }
+
+  .hero-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.3; animation: orbFloat 8s ease-in-out infinite alternate; }
+  .hero-orb:nth-child(1) { width: 300px; height: 300px; background: oklch(0.88 0.1 330); top: 10%; left: 10%; }
+  .hero-orb:nth-child(2) { width: 250px; height: 250px; background: oklch(0.88 0.08 200); top: 60%; right: 5%; animation-delay: -3s; }
+  .hero-orb:nth-child(3) { width: 200px; height: 200px; background: oklch(0.9 0.06 60); bottom: 10%; left: 30%; animation-delay: -5s; }
+  @keyframes orbFloat { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, -20px) scale(1.1); } }
+
+  .hero-content { position: relative; z-index: 2; }
+  .hero-badge {
+    display: inline-block; padding: 0.5rem 1.8rem; border: 1.5px solid oklch(0.75 0.1 15 / 0.4);
+    border-radius: 100px; font-size: 0.85rem; letter-spacing: 0.15em; color: var(--text-light);
+    margin-bottom: 2rem; background: var(--glass); backdrop-filter: blur(10px);
+    opacity: 0; animation: fadeUp 1s 0.3s ease-out forwards;
+  }
+  .hero h1 {
+    font-family: 'Ma Shan Zheng', cursive; font-size: clamp(3rem, 8vw, 7rem); line-height: 1.2;
+    margin-bottom: 1rem; opacity: 0; animation: fadeUp 1.2s 0.6s ease-out forwards;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(135deg, oklch(0.6 0.2 15), oklch(0.65 0.18 330), oklch(0.7 0.15 300));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    background-size: 200% 200%; animation: gradientShift 4s ease-in-out infinite;
+  }
+  @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+  .hero-sub {
+    font-family: 'ZCOOL XiaoWei', serif; font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--text-light); max-width: 500px; margin: 0 auto 3rem;
+    opacity: 0; animation: fadeUp 1s 0.9s ease-out forwards;
+  }
+
+  .hero-avatar {
+    width: 180px; height: 180px; border-radius: 50%; overflow: hidden;
+    border: 3px solid oklch(0.92 0.04 30 / 0.6); box-shadow: 0 8px 32px var(--shadow);
+    margin: 0 auto 1.5rem; opacity: 0; animation: fadeUp 1s 0.4s ease-out forwards;
+    transition: transform 0.4s, box-shadow 0.4s;
+  }
+  .hero-avatar:hover { transform: scale(1.05); box-shadow: 0 12px 40px oklch(0.7 0.08 15 / 0.2); }
+  .hero-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .scroll-hint { opacity: 0; animation: fadeUp 1s 1.5s ease-out forwards; }
+  .scroll-hint span { display: block; font-size: 0.75rem; letter-spacing: 0.2em; color: var(--text-light); margin-bottom: 0.8rem; }
+  .scroll-line { width: 1px; height: 40px; background: oklch(0.7 0.08 15 / 0.4); margin: 0 auto; position: relative; overflow: hidden; }
+  .scroll-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: var(--rose); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0% { top: -100%; } 50% { top: 100%; } 100% { top: 100%; } }
+
+  /* ===== Sections ===== */
+  section { padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 3rem); max-width: 960px; margin: 0 auto; }
+  .section-label { font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.8rem; opacity: 0; transform: translateY(20px); }
+  .section-title { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.3; margin-bottom: 2rem; opacity: 0; transform: translateY(20px); }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+
+  /* ===== Letter ===== */
+  .letter-section {
+    background: radial-gradient(ellipse at 30% 20%, oklch(0.94 0.04 300 / 0.15), transparent 50%),
+                radial-gradient(ellipse at 70% 80%, oklch(0.94 0.04 60 / 0.15), transparent 50%);
+    padding: clamp(4rem, 10vw, 8rem) 0; max-width: 100%;
+  }
+  .letter-section .section-title { text-align: center; }
+  .letter {
+    max-width: 650px; margin: 0 auto; padding: clamp(2.5rem, 5vw, 4rem);
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; position: relative;
+    box-shadow: 0 2px 8px var(--shadow), 0 12px 40px var(--shadow);
+    transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+  }
+  .letter::before { content: '\201C'; font-family: 'Ma Shan Zheng', cursive; font-size: 6rem; color: oklch(0.85 0.08 15 / 0.12); position: absolute; top: 0.5rem; left: 1.5rem; line-height: 1; }
+  .letter p { font-size: clamp(1rem, 2.2vw, 1.15rem); line-height: 2.1; color: oklch(0.35 0.02 30); margin-bottom: 1.5rem; position: relative; z-index: 1; }
+  .letter p:last-of-type { margin-bottom: 0; }
+  .letter .signature { text-align: right; font-family: 'Ma Shan Zheng', cursive; font-size: 1.3rem; color: var(--text-light); margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid oklch(0.85 0.03 30 / 0.3); }
+  [data-theme="dark"] .letter p { color: oklch(0.85 0.01 30); }
+  [data-theme="dark"] .letter .signature { border-top-color: oklch(0.3 0.02 30 / 0.4); }
+
+  [data-typewriter] { min-height: 2.2em; visibility: hidden; }
+  [data-typewriter]:not(:empty) { visibility: visible; }
+
+  /* ===== Memories Grid ===== */
+  .memories-grid-section { max-width: 1100px; }
+  .memories-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem; margin-top: 2rem;
+  }
+  .memory-card {
+    border-radius: 14px; overflow: hidden; position: relative;
+    box-shadow: 0 4px 16px var(--shadow); transition: all 0.4s;
+    background: var(--card-bg); aspect-ratio: 4/3;
+  }
+  .memory-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px var(--shadow); }
+  .memory-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s; }
+  .memory-card:hover img { transform: scale(1.08); }
+  .memory-card .overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, oklch(0 0 0 / 0.5));
+    padding: 1.5rem 1rem 0.8rem; color: #fff;
+    font-size: 0.85rem; font-family: 'ZCOOL XiaoWei', serif; letter-spacing: 0.05em;
+    transform: translateY(100%); transition: transform 0.3s;
+  }
+  .memory-card:hover .overlay { transform: translateY(0); }
+
+  /* Uniform cards — no tall variant */
+
+  /* ===== Timeline ===== */
+  .timeline { position: relative; padding-left: 2.5rem; margin-top: 2rem; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1.5px; background: linear-gradient(to bottom, transparent, oklch(0.8 0.08 15 / 0.3), oklch(0.8 0.08 300 / 0.3), transparent); }
+  .timeline-item { position: relative; margin-bottom: 2.5rem; opacity: 0; transform: translateX(-20px); transition: all 0.6s ease-out; }
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
+  .timeline-item::before { content: ''; position: absolute; left: -2.5rem; top: 0.4rem; width: 10px; height: 10px; border-radius: 50%; background: var(--rose); box-shadow: 0 0 0 3px oklch(0.85 0.08 15 / 0.2); }
+  .timeline-year { font-family: 'Ma Shan Zheng', cursive; font-size: 1.2rem; color: oklch(0.6 0.12 15); margin-bottom: 0.3rem; }
+  .timeline-text { font-size: 0.95rem; line-height: 1.8; color: var(--text-light); }
+
+  /* ===== Gallery ===== */
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.8rem; margin-top: 2rem;
+  }
+  .gallery-grid .gallery-item {
+    border-radius: 10px; overflow: hidden; position: relative;
+    box-shadow: 0 2px 10px var(--shadow); transition: all 0.3s; cursor: pointer;
+    aspect-ratio: 1;
+  }
+  .gallery-grid .gallery-item:hover { transform: scale(1.03); box-shadow: 0 8px 24px var(--shadow); }
+  .gallery-grid .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ===== Star Jar ===== */
+  .star-jar-section {
+    background: radial-gradient(ellipse at 50% 80%, oklch(0.94 0.04 60 / 0.12), transparent 60%);
+    padding-bottom: clamp(5rem, 10vw, 8rem); text-align: center;
+  }
+  .star-jar { position: relative; width: 180px; margin: 2rem auto 1rem; cursor: pointer; }
+  .jar-lid { width: 120px; height: 16px; background: linear-gradient(to bottom, oklch(0.75 0.06 30), oklch(0.65 0.06 30)); border-radius: 8px 8px 0 0; margin: 0 auto; position: relative; z-index: 2; }
+  .jar-body { width: 150px; height: 200px; background: oklch(0.98 0.005 90 / 0.35); border: 2.5px solid oklch(0.8 0.04 30 / 0.3); border-radius: 0 0 20px 20px; margin: 0 auto; position: relative; overflow: hidden; backdrop-filter: blur(4px); padding: 10px; }
+  .jar-body::after { content: ''; position: absolute; inset: 6px; border: 1px dashed oklch(0.8 0.04 30 / 0.15); border-radius: 0 0 16px 16px; pointer-events: none; }
+  .jar-star { position: absolute; animation: starTwinkle 2s ease-in-out infinite; }
+  @keyframes starTwinkle { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.15); } }
+  .jar-hint { font-size: 0.9rem; color: var(--text-light); min-height: 1.6em; font-family: 'ZCOOL XiaoWei', serif; margin-top: 1rem; transition: color 0.3s; }
+  .jar-click-hint { font-size: 0.7rem; color: oklch(0.6 0.04 30 / 0.5); margin-top: 0.5rem; }
+
+  /* ===== Wishes ===== */
+  .wishes-section { text-align: center; }
+  .wish-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .wish-card {
+    padding: 0.6rem 1.4rem; border-radius: 100px;
+    background: linear-gradient(135deg, oklch(0.95 0.03 30 / 0.5), oklch(0.95 0.03 300 / 0.3));
+    border: 1px solid oklch(0.85 0.04 30 / 0.25);
+    font-size: 0.9rem; color: var(--text); transition: all 0.3s;
+    opacity: 0; transform: scale(0.8);
+  }
+  .wish-card.visible { opacity: 1; transform: scale(1); transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .wish-card:hover { transform: scale(1.08); background: linear-gradient(135deg, oklch(0.95 0.03 30 / 0.7), oklch(0.95 0.03 300 / 0.5)); }
+  [data-theme="dark"] .wish-card { background: linear-gradient(135deg, oklch(0.2 0.02 30 / 0.5), oklch(0.2 0.02 300 / 0.3)); border-color: oklch(0.3 0.03 30 / 0.3); }
+
+  /* ===== Countdown ===== */
+  .countdown-section { text-align: center; }
+  .countdown-box { display: flex; justify-content: center; gap: 1.5rem; margin: 2rem 0 1.5rem; }
+  .countdown-item { text-align: center; }
+  .countdown-num { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2rem, 6vw, 3.5rem); background: linear-gradient(135deg, var(--rose), oklch(0.7 0.14 330)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; }
+  .countdown-label { font-size: 0.75rem; color: var(--text-light); letter-spacing: 0.1em; }
+  .countdown-msg { font-family: 'ZCOOL XiaoWei', serif; font-size: 0.9rem; color: var(--text-light); line-height: 1.8; }
+
+  /* ===== Certificate ===== */
+  .certificate-section { max-width: 800px; }
+  .certificate {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 14px; padding: clamp(2rem, 4vw, 3.5rem);
+    box-shadow: 0 4px 24px var(--shadow), inset 0 0 0 1px oklch(0.95 0.01 90);
+    position: relative; margin-top: 2rem; text-align: center;
+    transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+  }
+  .certificate::before { content: ''; position: absolute; inset: 6px; border: 1.5px solid oklch(0.82 0.06 30 / 0.15); border-radius: 10px; pointer-events: none; }
+  .certificate-seal {
+    width: 60px; height: 60px; margin: 0 auto 1rem;
+    background: radial-gradient(circle, oklch(0.8 0.14 15), oklch(0.7 0.16 15));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.5rem; font-family: 'Ma Shan Zheng', cursive;
+    transform: rotate(-15deg); box-shadow: 0 2px 8px oklch(0.7 0.1 15 / 0.3);
+  }
+  .certificate h3 { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: 0.5rem; letter-spacing: 0.1em; }
+  .certificate .recipient {
+    font-size: clamp(1.8rem, 5vw, 2.8rem); font-family: 'Ma Shan Zheng', cursive;
+    background: linear-gradient(135deg, oklch(0.6 0.2 15), oklch(0.7 0.15 330));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin: 0.5rem 0;
+  }
+  .certificate p { font-size: 0.9rem; line-height: 1.8; color: var(--text-light); }
+  .certificate .date { margin-top: 1.5rem; font-size: 0.8rem; color: oklch(0.6 0.04 30); }
+  .certificate .sign-line { display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid oklch(0.85 0.03 30 / 0.25); }
+  .certificate .sign-line span { font-size: 0.75rem; color: var(--text-light); }
+
+  /* ===== Family Gallery ===== */
+  .family-section, .daily-section { max-width: 1000px; }
+  .family-grid, .daily-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.8rem; margin-top: 1.5rem;
+  }
+  .family-grid .gallery-item, .daily-grid .gallery-item {
+    border-radius: 10px; overflow: hidden; position: relative;
+    box-shadow: 0 2px 10px var(--shadow); transition: all 0.3s; cursor: pointer;
+    aspect-ratio: 1;
+  }
+  .family-grid .gallery-item:hover, .daily-grid .gallery-item:hover { transform: scale(1.03); box-shadow: 0 8px 24px var(--shadow); }
+  .family-grid .gallery-item img, .daily-grid .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ===== Flip Encouragement Cards ===== */
+  .flip-section { max-width: 700px; text-align: center; }
+  .flip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin-top: 2rem; perspective: 800px; }
+  .flip-card { aspect-ratio: 1; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+  .flip-card.flipped { transform: rotateY(180deg); }
+  .flip-card-front, .flip-card-back {
+    position: absolute; inset: 0; border-radius: 14px; backface-visibility: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 0.8rem; box-shadow: 0 4px 16px var(--shadow);
+  }
+  .flip-card-front {
+    background: linear-gradient(135deg, oklch(0.93 0.05 30), oklch(0.93 0.05 300));
+    font-size: 2rem; border: 1.5px solid oklch(0.85 0.04 30 / 0.2);
+  }
+  .flip-card-front span { display: block; font-size: 0.7rem; color: var(--text-light); margin-top: 0.3rem; font-family: 'ZCOOL XiaoWei', serif; }
+  .flip-card-back {
+    background: var(--card-bg); border: 1.5px solid var(--border);
+    transform: rotateY(180deg); font-size: 0.8rem; line-height: 1.5; color: var(--text);
+    font-family: 'ZCOOL XiaoWei', serif; text-align: center;
+  }
+  .flip-card-back .emoji { font-size: 1.5rem; margin-bottom: 0.3rem; }
+  [data-theme="dark"] .flip-card-front { background: linear-gradient(135deg, oklch(0.2 0.03 30), oklch(0.2 0.03 300)); }
+
+  /* ===== Secret Easter Egg ===== */
+  .easter-egg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); z-index: 9997; pointer-events: none; text-align: center; opacity: 0; transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  .easter-egg.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .easter-egg .egg-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+  .easter-egg .egg-text { font-size: 1.2rem; color: var(--text); font-family: 'Ma Shan Zheng', cursive; background: var(--card-bg); padding: 0.5rem 1.5rem; border-radius: 100px; backdrop-filter: blur(8px); box-shadow: 0 8px 32px var(--shadow); }
+
+  /* ===== Ending ===== */
+  .ending-section { text-align: center; }
+  .ending-section .heart-icon { font-size: 2.5rem; margin-bottom: 1.5rem; opacity: 0; }
+  .ending-section .heart-icon.visible { opacity: 1; animation: heartbeat 1.5s ease-in-out infinite; }
+  @keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.2); } 30% { transform: scale(1); } 45% { transform: scale(1.15); } }
+  .ending-text { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1.3; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); }
+  .ending-text.visible { opacity: 1; transform: translateY(0); transition: all 1s 0.2s ease-out; }
+  .ending-sub { font-family: 'ZCOOL XiaoWei', serif; font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--text-light); opacity: 0; transform: translateY(20px); max-width: 500px; margin-left: auto; margin-right: auto; }
+  .ending-sub.visible { opacity: 1; transform: translateY(0); transition: all 1s 0.4s ease-out; }
+  .ending-signoff { margin-top: 2.5rem; opacity: 0; transform: translateY(15px); font-family: 'Ma Shan Zheng', cursive; font-size: clamp(1.1rem, 2.5vw, 1.4rem); color: var(--text-light); line-height: 2; }
+  .ending-signoff.visible { opacity: 1; transform: translateY(0); transition: all 1s 0.8s ease-out; }
+  .ending-divider { width: 60px; height: 1.5px; margin: 2.5rem auto; background: linear-gradient(90deg, transparent, var(--rose), transparent); opacity: 0; }
+  .ending-divider.visible { opacity: 1; transition: opacity 1s 0.6s ease-out; }
+
+  /* ===== Footer ===== */
+  .page-footer { text-align: center; padding: 2rem; font-size: 0.75rem; color: var(--text-light); opacity: 0.6; font-family: 'ZCOOL XiaoWei', serif; letter-spacing: 0.05em; }
+  .page-footer span { display: inline-block; }
+
+  /* ===== Fixed buttons ===== */
+  .fixed-btns { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+  .fixed-btn {
+    width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border);
+    background: var(--glass); backdrop-filter: blur(8px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow);
+  }
+  .fixed-btn:hover { transform: scale(1.1); box-shadow: 0 6px 20px var(--shadow); }
+  .fixed-btn.playing { background: oklch(0.85 0.1 15 / 0.15); border-color: oklch(0.7 0.12 15 / 0.5); box-shadow: 0 0 20px oklch(0.78 0.12 15 / 0.25); }
+
+  /* ===== Back to top ===== */
+  .back-top { position: fixed; bottom: 10rem; right: 1.5rem; z-index: 199; opacity: 0; transform: translateY(20px); pointer-events: none; transition: all 0.4s; }
+  .back-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .back-top button { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--glass); backdrop-filter: blur(8px); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow); color: var(--text); }
+  .back-top button:hover { transform: scale(1.1); box-shadow: 0 6px 20px var(--shadow); }
+
+  /* ===== Music equalizer ===== */
+  .equalizer { display: flex; align-items: center; gap: 2px; height: 16px; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+  .equalizer.active { opacity: 1; }
+  .equalizer-bar { width: 2.5px; border-radius: 2px; background: oklch(0.72 0.14 15); animation: equalize 1.2s ease-in-out infinite; transform-origin: bottom; }
+  .equalizer-bar:nth-child(1) { height: 40%; animation-delay: 0s; }
+  .equalizer-bar:nth-child(2) { height: 65%; animation-delay: 0.15s; }
+  .equalizer-bar:nth-child(3) { height: 50%; animation-delay: 0.3s; }
+  .equalizer-bar:nth-child(4) { height: 75%; animation-delay: 0.45s; }
+  .equalizer-bar:nth-child(5) { height: 45%; animation-delay: 0.6s; }
+  .equalizer-bar:nth-child(6) { height: 60%; animation-delay: 0.2s; }
+  @keyframes equalize { 0%, 100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
+
+  /* ===== Floating notes ===== */
+  .music-note { position: fixed; pointer-events: none; z-index: 101; font-size: 1.2rem; opacity: 0; animation: noteFloat 3s ease-out forwards; }
+  @keyframes noteFloat { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.5); } 20% { opacity: 0.8; } 100% { opacity: 0; transform: translate(var(--nx), var(--ny)) rotate(360deg) scale(1.2); } }
+
+  /* ===== Confetti ===== */
+  .confetti-piece { position: fixed; pointer-events: none; z-index: 9998; width: 8px; height: 8px; opacity: 0; animation: confettiFall linear forwards; }
+  @keyframes confettiFall { 0% { opacity: 0; transform: translateY(-10vh) rotate(0deg); } 10% { opacity: 1; } 90% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(105vh) rotate(720deg); } }
+
+  /* ===== Scroll progress ===== */
+  .scroll-progress { position: fixed; top: 0; left: 0; z-index: 300; height: 3px; background: linear-gradient(90deg, oklch(0.7 0.16 15), oklch(0.72 0.14 330), oklch(0.75 0.1 300)); width: 0%; transition: width 0.1s linear; box-shadow: 0 0 8px oklch(0.78 0.12 15 / 0.3); }
+
+  /* ===== Lightbox ===== */
+  .lightbox { position: fixed; inset: 0; z-index: 9999; background: oklch(0 0 0 / 0.85); display: none; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; backdrop-filter: blur(8px); }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; box-shadow: 0 20px 60px oklch(0 0 0 / 0.5); animation: lightboxIn 0.3s ease-out; }
+  @keyframes lightboxIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+  .lightbox .close { position: absolute; top: 1.5rem; right: 2rem; color: #fff; font-size: 2rem; cursor: pointer; opacity: 0.7; transition: opacity 0.3s; background: none; border: none; }
+  .lightbox .close:hover { opacity: 1; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 480px) {
+    .memories-grid { grid-template-columns: 1fr; }
+    .family-grid, .daily-grid { grid-template-columns: 1fr 1fr; }
+    .countdown-box { gap: 0.8rem; }
+    .certificate .sign-line { flex-direction: column; gap: 0.5rem; }
+    .hero-avatar { width: 140px; height: 140px; }
+    .flip-grid { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  }
+  @media (max-width: 360px) { .flip-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head><body>
+
+<audio id="bgm" src="所念皆星河（新版）-CMJ.mp3" loop preload="auto"></audio>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div id="petals"></div>
+<div class="lightbox" id="lightbox"><button class="close" id="lightboxClose">&times;</button><img id="lightboxImg" src="" alt=""></div>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-orb"></div><div class="hero-orb"></div><div class="hero-orb"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✨ 写给你的毕业礼物</div>
+    <div class="hero-avatar"><img src="美照/mmexport1738569370256.jpg" alt="最美毕业照"></div>
+    <h1>致 <span class="accent">最棒的你</span></h1>
+    <p class="hero-sub">愿这张页面，装满所有美好的祝福与回忆</p>
+    <div class="scroll-hint">
+      <span>向下滑动 · 收获惊喜</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</header>
+
+<!-- Letter -->
+<section class="letter-section">
+  <div class="section-title reveal" style="text-align:center;">一封家书 💌</div>
+  <div class="letter reveal visible" id="typewriterLetter">
+    <p data-typewriter></p>
+    <p data-typewriter></p>
+    <p data-typewriter></p>
+    <p data-typewriter></p>
+    <div class="signature" data-typewriter-signature>永远爱你的哥哥和家人 ❤️</div>
+  </div>
+</section>
+
+<!-- Memories -->
+<section class="memories-grid-section">
+  <div class="section-label reveal">MEMORIES</div>
+  <div class="section-title reveal">那些闪闪发光的瞬间 ✨</div>
+  <div class="memories-grid" id="memoriesGrid">
+    <div class="memory-card" data-src="校园时光/396288535ec28bd773ca069240aa8cb8.jpg">
+      <img src="校园时光/396288535ec28bd773ca069240aa8cb8.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">青春正当时 🌟</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/526ebd84d2edfd7b0d29280514a1a63e.jpg">
+      <img src="校园时光/526ebd84d2edfd7b0d29280514a1a63e.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">那些奋斗的日子 📚</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/5a480b2ba27a57000515ab70723a6ec3.jpg">
+      <img src="校园时光/5a480b2ba27a57000515ab70723a6ec3.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">每一个瞬间都珍贵 📸</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/8ea77019baab75270ade27fce89bda62.jpg">
+      <img src="校园时光/8ea77019baab75270ade27fce89bda62.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">并肩走过的路 👭</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/8ed04f7e4572359f6393fe2f5f3aca13.jpg">
+      <img src="校园时光/8ed04f7e4572359f6393fe2f5f3aca13.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">最好的时光 🌈</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/cd4cc09d8f22800d931b389b29933efb.jpg">
+      <img src="校园时光/cd4cc09d8f22800d931b389b29933efb.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">闪闪发光的你 ✨</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/ec8de0d755d64677e748f267a7ef01ee.jpg">
+      <img src="校园时光/ec8de0d755d64677e748f267a7ef01ee.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">青春不散场 🎓</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/f1bd578aab0689420c80025da15a6e4c.jpg">
+      <img src="校园时光/f1bd578aab0689420c80025da15a6e4c.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">最美的年华 🌸</div>
+    </div>
+    <div class="memory-card" data-src="校园时光/f7534f1ceb6d56d9bd3cf80c92bfdaf3.jpg">
+      <img src="校园时光/f7534f1ceb6d56d9bd3cf80c92bfdaf3.jpg" alt="校园时光" loading="lazy">
+      <div class="overlay">一起奔向未来 🚀</div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section>
+  <div class="section-label reveal">JOURNEY</div>
+  <div class="section-title reveal">你的成长足迹 🌱</div>
+  <div class="timeline">
+    <div class="timeline-item visible"><div class="timeline-year">七年级 · 起点</div><div class="timeline-text">踏入中学校园，一切都是崭新的。新的教室、新的老师、新的朋友，你开始了人生中重要的一段旅程。</div></div>
+    <div class="timeline-item visible"><div class="timeline-year">八年级 · 成长</div><div class="timeline-text">渐渐适应了节奏，找到了自己的方向。学会了面对困难，也学会了在忙碌中寻找快乐。</div></div>
+    <div class="timeline-item visible"><div class="timeline-year">九年级 · 冲刺</div><div class="timeline-text">最后的冲刺阶段，每一天都在为梦想拼搏。这段日子虽然辛苦，但也是最充实的时光。</div></div>
+    <div class="timeline-item visible"><div class="timeline-year">现在 · 毕业</div><div class="timeline-text">站在毕业的门槛上，回望来路，你已经走了很远。带着这三年的收获，勇敢地奔赴下一站吧！</div></div>
+  </div>
+</section>
+
+<!-- Family -->
+<section class="family-section">
+  <div class="section-label reveal">FAMILY</div>
+  <div class="section-title reveal">家人的爱 🏠</div>
+  <p class="reveal" style="font-family:'ZCOOL XiaoWei',serif;color:var(--text-light);font-size:0.9rem;margin-bottom:0.5rem;">无论走多远，家永远是最温暖的港湾 💕</p>
+  <div class="family-grid">
+    <div class="gallery-item" data-src="家人合照/IMG_20221230_102752.jpg"><img src="家人合照/IMG_20221230_102752.jpg" alt="家人合照" loading="lazy"></div>
+    <div class="gallery-item" data-src="家人合照/0ccda70a4a8fab6b7b7a5663e704b08b.jpg"><img src="家人合照/0ccda70a4a8fab6b7b7a5663e704b08b.jpg" alt="家人合照" loading="lazy"></div>
+    <div class="gallery-item" data-src="家人合照/2850f291ca13bf7a3c3939558114ec58.jpg"><img src="家人合照/2850f291ca13bf7a3c3939558114ec58.jpg" alt="家人合照" loading="lazy"></div>
+    <div class="gallery-item" data-src="家人合照/4fec81c641433efe.jpg"><img src="家人合照/4fec81c641433efe.jpg" alt="家人合照" loading="lazy"></div>
+    <div class="gallery-item" data-src="家人合照/910c92ff9a94d4e59cc7841485d3d671.jpg"><img src="家人合照/910c92ff9a94d4e59cc7841485d3d671.jpg" alt="家人合照" loading="lazy"></div>
+    <div class="gallery-item" data-src="家人合照/b003f76d9d0e03df868d016fef0b9c5e.jpg"><img src="家人合照/b003f76d9d0e03df868d016fef0b9c5e.jpg" alt="家人合照" loading="lazy"></div>
+    <div class="gallery-item" data-src="家人合照/b8f599ece75a248ef0137f1944016d9f.jpg"><img src="家人合照/b8f599ece75a248ef0137f1944016d9f.jpg" alt="家人合照" loading="lazy"></div>
+    <div class="gallery-item" data-src="家人合照/mmexport1660879014359.jpg"><img src="家人合照/mmexport1660879014359.jpg" alt="家人合照" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- Daily Life -->
+<section class="daily-section">
+  <div class="section-label reveal">DAILY</div>
+  <div class="section-title reveal">日常点滴 ☀️</div>
+  <p class="reveal" style="font-family:'ZCOOL XiaoWei',serif;color:var(--text-light);font-size:0.9rem;margin-bottom:0.5rem;">平凡的日子，因为有你而闪闪发光 ✨</p>
+  <div class="daily-grid">
+    <div class="gallery-item" data-src="日常点滴/8edbd0d94660ef9b909e15933fda5c49.jpg"><img src="日常点滴/8edbd0d94660ef9b909e15933fda5c49.jpg" alt="日常点滴" loading="lazy"></div>
+    <div class="gallery-item" data-src="日常点滴/1b81ed10203d8100827b425a5653d648.jpg"><img src="日常点滴/1b81ed10203d8100827b425a5653d648.jpg" alt="日常点滴" loading="lazy"></div>
+    <div class="gallery-item" data-src="日常点滴/514c1fa304c7f4798b1a12557cf3a41f.jpg"><img src="日常点滴/514c1fa304c7f4798b1a12557cf3a41f.jpg" alt="日常点滴" loading="lazy"></div>
+    <div class="gallery-item" data-src="日常点滴/c2739e9c6247dac6800b6878f2fe291c.jpg"><img src="日常点滴/c2739e9c6247dac6800b6878f2fe291c.jpg" alt="日常点滴" loading="lazy"></div>
+    <div class="gallery-item" data-src="日常点滴/f28cc29af2e2a1cb533ed3f3ac565b4d.jpg"><img src="日常点滴/f28cc29af2e2a1cb533ed3f3ac565b4d.jpg" alt="日常点滴" loading="lazy"></div>
+    <div class="gallery-item" data-src="日常点滴/IMG_20200210_204402.jpg"><img src="日常点滴/IMG_20200210_204402.jpg" alt="日常点滴" loading="lazy"></div>
+    <div class="gallery-item" data-src="日常点滴/IMG_20240219_202148_edit_219744253152926.jpg"><img src="日常点滴/IMG_20240219_202148_edit_219744253152926.jpg" alt="日常点滴" loading="lazy"></div>
+    <div class="gallery-item" data-src="日常点滴/IMG_20250123_182356.jpg"><img src="日常点滴/IMG_20250123_182356.jpg" alt="日常点滴" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- Star Jar -->
+<section class="star-jar-section">
+  <div class="section-label reveal">WISHES</div>
+  <div class="section-title reveal">为你折的星星瓶 ⭐</div>
+  <p class="reveal" style="font-family: 'ZCOOL XiaoWei', serif; color: var(--text-light); line-height: 1.8; margin-bottom: 0.5rem;">每一颗星星，都藏着一个祝福。</p>
+  <p class="reveal" style="font-family: 'ZCOOL XiaoWei', serif; color: var(--text-light); line-height: 1.8; margin-bottom: 1rem;">点击瓶子，许个愿吧 ✨</p>
+  <div class="star-jar reveal" id="starJar" onclick="addStar()">
+    <div class="jar-lid"></div>
+    <div class="jar-body" id="jarBody"></div>
+  </div>
+  <div class="jar-hint" id="jarHint">愿你勇敢无畏 🌟</div>
+  <div class="jar-click-hint">✨ 点击瓶子许愿 ✨</div>
+</section>
+
+<!-- Wishes -->
+<section class="wishes-section">
+  <div class="section-label reveal">BLESSINGS</div>
+  <div class="section-title reveal" style="max-width: 500px; margin-left: auto; margin-right: auto;">给你的一百个祝福 🌈</div>
+  <div class="wish-cards">
+    <div class="wish-card visible">考的全会 🎯</div><div class="wish-card visible">蒙的全对 ✨</div>
+    <div class="wish-card visible">前程似锦 🌸</div><div class="wish-card visible">未来可期 🌟</div>
+    <div class="wish-card visible">天天开心 😊</div><div class="wish-card visible">健康平安 🍀</div>
+    <div class="wish-card visible">自信勇敢 💪</div><div class="wish-card visible">万事胜意 🎀</div>
+    <div class="wish-card visible">所求皆如愿 💫</div><div class="wish-card visible">所行皆坦途 🛤️</div>
+    <div class="wish-card visible">不负韶华 📚</div><div class="wish-card visible">做最闪亮的自己 💎</div>
+  </div>
+</section>
+
+<!-- Countdown -->
+<section class="countdown-section">
+  <div class="section-label reveal">COUNTDOWN</div>
+  <div class="section-title reveal" style="margin-bottom: 0.5rem;">中考倒计时 ⏳</div>
+  <div class="countdown-box reveal">
+    <div class="countdown-item"><div class="countdown-num" id="cd-days">16</div><div class="countdown-label">天</div></div>
+    <div class="countdown-item"><div class="countdown-num" id="cd-hours">14</div><div class="countdown-label">时</div></div>
+    <div class="countdown-item"><div class="countdown-num" id="cd-mins">39</div><div class="countdown-label">分</div></div>
+    <div class="countdown-item"><div class="countdown-num" id="cd-secs">11</div><div class="countdown-label">秒</div></div>
+  </div>
+  <p class="countdown-msg reveal">每一秒的倒数，都是离梦想更近一步。<br>你准备好了，我们都相信你。</p>
+</section>
+
+<!-- Certificate -->
+<section class="certificate-section">
+  <div class="section-label reveal">CERTIFICATE</div>
+  <div class="section-title reveal" style="max-width: 500px;">毕业证书</div>
+  <div class="certificate reveal">
+    <div class="certificate-seal">🎓</div>
+    <h3>毕业证书</h3>
+    <div class="recipient">最棒的你</div>
+    <p>恭喜你完成初中学业，顺利毕业！</p>
+    <p>你以优异的成绩和坚韧的品格，走过了这段闪闪发光的青春旅程。</p>
+    <p style="margin-top: 1rem; font-size: 0.85rem; color: oklch(0.55 0.04 30);">愿你带着这三年的收获与成长，自信地迈向更高的学府，奔赴更广阔的天地。</p>
+    <div class="date">签发日期：2026年6月</div>
+    <div class="sign-line">
+      <span>校长：永远爱你的家人 ❤️</span>
+      <span>学校：青春中学 · 永不毕业</span>
+    </div>
+  </div>
+</section>
+
+<!-- Flip Cards -->
+<section class="flip-section">
+  <div class="section-label reveal">SURPRISE</div>
+  <div class="section-title reveal" style="max-width:500px;">戳戳看，有惊喜 🎁</div>
+  <p class="reveal" style="font-family:'ZCOOL XiaoWei',serif;color:var(--text-light);font-size:0.9rem;margin-bottom:0.5rem;">每张卡片背后都藏着一句悄悄话，点开看看吧 ✨</p>
+  <div class="flip-grid" id="flipGrid"></div>
+</section>
+
+
+<div class="easter-egg" id="easterEgg">
+  <div class="egg-icon">💖</div>
+  <div class="egg-text">妹妹你是全宇宙最棒的存在！</div>
+</div>
+
+<!-- Ending -->
+<section class="ending-section">
+  <div class="heart-icon visible">❤️</div>
+  <div class="ending-text visible">无论走到哪里<br>你都是最棒的</div>
+  <div class="ending-sub visible">愿你带着爱与勇气，奔赴每一场山海</div>
+  <div class="ending-divider visible"></div>
+  <div class="ending-signoff visible">
+    哥哥 · 妈妈 · 爸爸 · 奶奶 · 爷爷<br>
+    我们永远为你骄傲，永远爱你 ❤️
+  </div>
+</section>
+
+<!-- Confetti re-trigger on ending -->
+<div class="confetti-container" id="confettiTrigger"></div>
+
+<!-- Footer -->
+<footer class="page-footer">
+  <span>🌸 给最棒的你 · 毕业快乐 · 永远爱你的家人 💕</span>
+</footer>
+
+<!-- Fixed buttons -->
+<div class="fixed-btns">
+  <div class="equalizer" id="equalizer">
+    <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+    <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+  </div>
+  <button class="fixed-btn" id="themeBtn" title="切换主题">🌙</button>
+  <button class="fixed-btn" id="musicBtn" title="背景音乐">🎵</button>
+</div>
+
+<div class="back-top" id="backTop">
+  <button title="回到顶部">⬆</button>
+</div>
+
+<script>
+// Floating petals
+(function() {
+  const c = document.getElementById('petals');
+  const colors = ['oklch(0.85 0.1 15)', 'oklch(0.88 0.08 30)', 'oklch(0.9 0.06 300)', 'oklch(0.87 0.08 60)'];
+  function createPetal() {
+    const el = document.createElement('div'); el.className = 'petal';
+    const sz = 8 + Math.random() * 14; const col = colors[Math.floor(Math.random() * colors.length)];
+    el.style.cssText = 'left:' + Math.random()*100 + 'vw;width:' + sz + 'px;height:' + sz + 'px;animation-duration:' + (8+Math.random()*10) + 's;animation-delay:' + Math.random()*2 + 's;';
+    el.innerHTML = '<svg viewBox="0 0 20 20"><ellipse cx="10" cy="8" rx="6" ry="8" fill="' + col + '" opacity="0.6" transform="rotate(' + (Math.random()*60-30) + ' 10 10)"/></svg>';
+    c.appendChild(el); setTimeout(() => el.remove(), 20000);
+  }
+  for (let i = 0; i < 8; i++) setTimeout(createPetal, i * 800);
+  setInterval(createPetal, 2500);
+})();
+
+// Click sparkle
+document.addEventListener('click', function(e) {
+  const emojis = ['✨', '⭐', '💫', '🌟', '💖'];
+  for (let i = 0; i < 5; i++) {
+    const s = document.createElement('div'); s.className = 'sparkle-particle';
+    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    const a = (Math.PI*2*i)/5 + Math.random()*0.5, d = 30+Math.random()*40;
+    s.style.left = e.clientX+'px'; s.style.top = e.clientY+'px';
+    s.style.setProperty('--dx', Math.cos(a)*d+'px'); s.style.setProperty('--dy', Math.sin(a)*d+'px');
+    document.body.appendChild(s); setTimeout(() => s.remove(), 800);
+  }
+});
+
+// Scroll reveal observer
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal, .timeline-item, .wish-card, .ending-text, .ending-sub, .ending-signoff, .ending-divider, .heart-icon').forEach(el => observer.observe(el));
+
+// Star Jar
+const starEmojis = ['⭐','🌟','💫','✨','🌠'];
+const starWishes = ['愿你前程似锦','愿你被世界温柔以待','愿你永远快乐','愿你梦想成真','愿你勇敢无畏','愿你所求皆如愿','愿你所行皆坦途','愿你眼里有光','愿你心中有爱','愿你一路繁花','愿你归来仍是少年','愿你每一天都闪闪发光','愿你所爱皆在身旁','愿你笑容永远灿烂','愿你成为自己的太阳','愿你不负每一份热爱','愿你拥有最美好的未来','愿你被偏爱，被珍惜','愿你所到之处皆是花开','✨ 所有祝福都给你！'];
+let starCount = 0;
+function addStar() {
+  const jar = document.getElementById('jarBody'), hint = document.getElementById('jarHint');
+  if (starCount >= 20) { hint.textContent = '✨ 瓶子装满啦！所有祝福都给你～'; return; }
+  const star = document.createElement('span'); star.className = 'jar-star';
+  star.textContent = starEmojis[Math.floor(Math.random()*starEmojis.length)];
+  star.style.left = (10+Math.random()*120)+'px'; star.style.bottom = (10+Math.random()*150)+'px';
+  star.style.animationDelay = (Math.random()*2)+'s'; star.style.fontSize = (0.8+Math.random()*0.6)+'rem';
+  jar.appendChild(star); starCount++;
+  hint.textContent = starWishes[Math.min(starCount-1, starWishes.length-1)] + ' 🌟';
+  star.style.transform = 'scale(0)'; star.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+  requestAnimationFrame(() => { star.style.transform = 'scale(1)'; });
+}
+setTimeout(() => { for (let i = 0; i < 5; i++) setTimeout(addStar, i*300); }, 1500);
+
+// Countdown (June 16, 2026)
+const ZD = new Date('2026-06-16T09:00:00+08:00');
+function updateCountdown() {
+  const diff = ZD - new Date();
+  if (diff <= 0) { document.getElementById('cd-days').textContent='🎉'; document.getElementById('cd-hours').textContent=''; document.getElementById('cd-mins').textContent=''; document.getElementById('cd-secs').textContent=''; document.querySelector('.countdown-msg').textContent='中考已经结束啦！不管结果如何，你都是最棒的！🎉'; return; }
+  document.getElementById('cd-days').textContent = Math.floor(diff/86400000);
+  document.getElementById('cd-hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+  document.getElementById('cd-mins').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+}
+updateCountdown(); setInterval(updateCountdown, 1000);
+
+// Music
+const bgm = document.getElementById('bgm');
+const musicBtn = document.getElementById('musicBtn');
+const equalizer = document.getElementById('equalizer');
+let isPlaying = false;
+let noteInterval = null;
+musicBtn.addEventListener('click', function() {
+  if (isPlaying) {
+    bgm.pause(); musicBtn.classList.remove('playing'); musicBtn.textContent = '🎵'; equalizer.classList.remove('active'); clearInterval(noteInterval);
+  } else {
+    bgm.play().catch(() => {}); musicBtn.classList.add('playing'); musicBtn.textContent = '🔊'; equalizer.classList.add('active'); spawnMusicNote(); noteInterval = setInterval(spawnMusicNote, 1200);
+  }
+  isPlaying = !isPlaying;
+});
+function spawnMusicNote() {
+  if (!isPlaying) return;
+  const notes = ['♪', '♫', '♩', '♬'];
+  const el = document.createElement('div'); el.className = 'music-note';
+  el.textContent = notes[Math.floor(Math.random() * notes.length)];
+  const angle = -30 + Math.random() * 60; const dist = 40 + Math.random() * 60;
+  el.style.left = (window.innerWidth - 80) + 'px'; el.style.bottom = '100px';
+  el.style.setProperty('--nx', Math.cos(angle * Math.PI / 180) * dist + 'px');
+  el.style.setProperty('--ny', -(Math.sin(angle * Math.PI / 180) * dist) + 'px');
+  el.style.color = ['oklch(0.72 0.14 15)', 'oklch(0.7 0.12 330)', 'oklch(0.73 0.1 60)'][Math.floor(Math.random() * 3)];
+  document.body.appendChild(el); setTimeout(() => el.remove(), 3000);
+}
+// First interaction auto-play
+document.addEventListener('click', function autoPlay() {
+  if (!isPlaying && bgm && bgm.paused) {
+    bgm.play().then(() => { musicBtn.classList.add('playing'); musicBtn.textContent = '🔊'; equalizer.classList.add('active'); isPlaying = true; spawnMusicNote(); noteInterval = setInterval(spawnMusicNote, 1200); }).catch(() => {});
+  }
+  document.removeEventListener('click', autoPlay);
+}, { once: true });
+
+// Scroll progress
+window.addEventListener('scroll', function() {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('scrollProgress').style.width = (window.scrollY / h) * 100 + '%';
+});
+
+// Confetti
+(function() {
+  const colors = ['oklch(0.85 0.1 15)', 'oklch(0.88 0.08 30)', 'oklch(0.9 0.06 300)', 'oklch(0.87 0.08 60)', 'oklch(0.8 0.12 330)', 'oklch(0.85 0.1 200)'];
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div'); el.className = 'confetti-piece';
+      el.textContent = ['■', '●', '▲', '★'][Math.floor(Math.random() * 4)];
+      el.style.left = Math.random() * 100 + 'vw'; el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.fontSize = (6 + Math.random() * 10) + 'px'; el.style.animationDuration = (3 + Math.random() * 3) + 's';
+      document.body.appendChild(el); setTimeout(() => el.remove(), 6000);
+    }, i * 80);
+  }
+})();
+
+// Typewriter
+const typewriterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const letter = entry.target;
+      const texts = [
+        '亲爱的妹妹，恭喜你即将毕业！🎓',
+        '这三年，你从一个懵懂的小姑娘，慢慢长成了现在这个有想法、有韧劲的你。那些早起晚睡的日子，那些做不完的卷子，那些和同学一起笑闹的课间——都是你独一无二的故事。',
+        '中考只是人生路上的一个小小的站点，不管结果如何，你已经很棒了。未来还有更广阔的天地等着你去探索，更多的精彩等着你去经历。',
+        '请记住，无论何时何地，哥哥和家人永远是你最坚定的后盾。勇敢地向前走吧！'
+      ];
+      const paragraphs = letter.querySelectorAll('[data-typewriter]');
+      let charIndex = 0, pIndex = 0;
+      function typeNext() {
+        if (pIndex >= paragraphs.length) { letter.classList.add('typewriter-done'); return; }
+        const p = paragraphs[pIndex];
+        if (!p.textContent) { p.textContent = ''; p.style.visibility = 'visible'; }
+        const fullText = texts[pIndex];
+        if (charIndex < fullText.length) { p.textContent += fullText[charIndex]; charIndex++; setTimeout(typeNext, 40 + Math.random() * 30); }
+        else { pIndex++; charIndex = 0; setTimeout(typeNext, 300); }
+      }
+      typeNext(); typewriterObserver.unobserve(letter);
+    }
+  });
+}, { threshold: 0.3 });
+const twLetter = document.getElementById('typewriterLetter');
+if (twLetter) typewriterObserver.observe(twLetter);
+
+// Theme toggle
+const themeBtn = document.getElementById('themeBtn');
+let darkMode = localStorage.getItem('gradTheme') === 'dark';
+if (darkMode) { document.documentElement.setAttribute('data-theme', 'dark'); themeBtn.textContent = '☀️'; }
+themeBtn.addEventListener('click', function() {
+  darkMode = !darkMode;
+  document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : '');
+  themeBtn.textContent = darkMode ? '☀️' : '🌙';
+  localStorage.setItem('gradTheme', darkMode ? 'dark' : 'light');
+});
+
+// QR Code removed
+
+// Flip Cards
+(function() {
+  const grid = document.getElementById('flipGrid');
+  if (!grid) return;
+  const cards = [
+    { emoji: '🌟', msg: '你是这世上最闪亮的星星！' },
+    { emoji: '🌈', msg: '愿你的人生如彩虹般绚烂多彩' },
+    { emoji: '🦋', msg: '破茧成蝶，飞向更美的天空' },
+    { emoji: '🌻', msg: '永远向着阳光，开心地笑' },
+    { emoji: '🎀', msg: '你值得世间所有的美好' },
+    { emoji: '💪', msg: '你比你以为的更强大！' },
+    { emoji: '🍀', msg: '好运一直都在你身边' },
+    { emoji: '💎', msg: '你是独一无二的宝藏女孩' }
+  ];
+  cards.forEach((c, i) => {
+    const div = document.createElement('div'); div.className = 'flip-card reveal';
+    div.innerHTML = '<div class="flip-card-front">' + c.emoji + '<span>戳我 ✨</span></div><div class="flip-card-back"><div class="emoji">' + c.emoji + '</div>' + c.msg + '</div>';
+    div.addEventListener('click', function() { this.classList.toggle('flipped'); });
+    grid.appendChild(div);
+    observer.observe(div);
+  });
+})();
+
+// Back to top
+const backTop = document.getElementById('backTop');
+if (backTop) {
+  window.addEventListener('scroll', function() {
+    backTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.6);
+  });
+  backTop.querySelector('button').addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+// Confetti on ending section
+const endingSection = document.querySelector('.ending-section');
+if (endingSection) {
+  const confettiObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const colors = ['oklch(0.85 0.1 15)', 'oklch(0.88 0.08 30)', 'oklch(0.9 0.06 300)', 'oklch(0.87 0.08 60)', 'oklch(0.8 0.12 330)', 'oklch(0.85 0.1 200)'];
+        for (let i = 0; i < 40; i++) {
+          setTimeout(() => {
+            const el = document.createElement('div'); el.className = 'confetti-piece';
+            el.textContent = ['■', '●', '▲', '★'][Math.floor(Math.random() * 4)];
+            el.style.left = Math.random() * 100 + 'vw'; el.style.color = colors[Math.floor(Math.random() * colors.length)];
+            el.style.fontSize = (6 + Math.random() * 10) + 'px'; el.style.animationDuration = (3 + Math.random() * 3) + 's';
+            document.body.appendChild(el); setTimeout(() => el.remove(), 6000);
+          }, i * 60);
+        }
+        confettiObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  confettiObserver.observe(endingSection);
+}
+
+// Easter egg - click the ending heart 7 times
+let eggCount = 0;
+const endingHeart = document.querySelector('.heart-icon');
+if (endingHeart) {
+  endingHeart.addEventListener('click', function() {
+    eggCount++;
+    if (eggCount >= 7) {
+      const egg = document.getElementById('easterEgg');
+      egg.classList.add('show');
+      setTimeout(() => egg.classList.remove('show'), 3000);
+      eggCount = 0;
+    }
+  });
+}
+
+// Lightbox for all gallery images
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+document.querySelectorAll('.gallery-item, .memory-card').forEach(el => {
+  el.addEventListener('click', function() {
+    const src = this.dataset.src || this.querySelector('img')?.src;
+    if (src) { lightboxImg.src = src; lightbox.classList.add('open'); }
+  });
+});
+document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+</script>
+</body></html>
